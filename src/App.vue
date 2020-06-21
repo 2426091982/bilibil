@@ -10,6 +10,7 @@
     padding: 0;
     box-sizing: border-box;
     background-color: #f4f4f4;
+    font-family: '微软雅黑';
   }
   p {
     margin: 0;

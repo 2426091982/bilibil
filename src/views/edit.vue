@@ -1,25 +1,111 @@
 <template>
-  <div>
-    <Navbar/>
+  <div v-if="model" class="editViews">
+    <div style="margin-bottom: 15px">
+      <!-- 顶部导航 -->
+      <Navbar />
+    </div>
+    <!-- 个人信息 -->
+    <div class="uploadFile">
+      <van-uploader
+        class="uploadImg"
+        preview-size="100vw"
+        :after-read="afterRead"
+      />
+      <edit-banner left="头像">
+        <img v-if="model.user_img" :src="model.user_img" slot="right" alt="" />
+        <img v-else src="@/assets/head_img.jpg" slot="right" alt="" />
+      </edit-banner>
+    </div>
+    <edit-banner left="昵称" @bannerClick="show = true">
+      <a href="javascript:;" slot="right">
+        {{ model.name }}
+      </a>
+    </edit-banner>
+    <edit-banner left="账号">
+      <a href="javascript:;" slot="right">
+        {{ model.username }}
+      </a>
+    </edit-banner>
+    <edit-banner left="性别"></edit-banner>
+    <edit-banner left="个性签名"></edit-banner>
+
+    <!-- 弹出框 -->
+    <van-dialog v-model="show" title="昵称" show-cancel-button @confirm="confirmClick">
+      <van-field v-model="content" autofocus/>
+    </van-dialog>
   </div>
 </template>
 
-
 <script>
-import Navbar from '@/components/common/Navbar.vue'
+// 导入 顶部导航组件
+import Navbar from "@/components/common/Navbar.vue";
+// 导入信息组件
+import EditBanner from "@/components/common/EditBanner.vue";
 export default {
   data() {
     return {
-
-    }
+      show: false,
+      model: {},
+      content: '',
+    };
   },
   components: {
-      Navbar
-  }
-}
+    Navbar,
+    EditBanner,
+  },
+  created() {
+    this.selectUser();
+  },
+  methods: {
+    // 获取用户数据渲染页面
+    async selectUser() {
+      const res = await this.$http.get("/user/" + localStorage.getItem("id"));
+      console.log(res);
+      this.model = res.data[0];
+    },
+    // 上传头像触发
+    async afterRead(obj) {
+      const fromdata = new FormData();
+      // 把数据添加到 fromdata
+      fromdata.append("file", obj.file);
+      const res = await this.$http.post("/upload", fromdata);
+      // 修改图片
+      this.model.user_img = res.data.url;
+
+      this.userUpdate();
+    },
+    // 更新用户数据
+    async userUpdate() {
+      const res = await this.$http.post(
+        "/update/" + localStorage.getItem("id"),
+        this.model
+      );
+      console.log(res);
+    },
+    // 用户点击了确认
+    confirmClick() {
+      this.model.name = this.content;
+      this.userUpdate();
+    }
+  },
+};
 </script>
 
-
-<style scoped>
- 
+<style lang="less" scoped>
+.editViews a {
+  color: #333;
+}
+.editViews img {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+.uploadFile {
+  position: relative;
+  overflow: hidden;
+  .uploadImg {
+    opacity: 0;
+    position: absolute;
+  }
+}
 </style>
