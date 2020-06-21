@@ -3,6 +3,7 @@
       <Navbar />
       <img src="@/assets/bannerTop_new.png" alt="" class="backImg">
       <userDetail :userInfo="model" />
+      <userArticle />
   </div>
 </template>
 
@@ -12,6 +13,8 @@
 import Navbar from '@/components/common/Navbar.vue'
 // 导入 用户详情组件
 import userDetail from '@/components/userComponent/userDetail.vue'
+// 导入视频 / 动态组件
+import userArticle from '@/components/userComponent/userArticle.vue'
 export default {
   data() {
     return {
@@ -20,7 +23,8 @@ export default {
   },
   components: {
       Navbar,
-      userDetail
+      userDetail,
+      userArticle
   },
   created() {
       this.UserInfoData()

@@ -45,7 +45,7 @@ export default {
 <style lang="less" scoped>
 .userDetail {
   background-color: #fff;
-  padding: 0 3.333vw;
+  padding: 2vw 3.333vw;
   > div:nth-child(1) {
     display: flex;
     align-items: center;
@@ -84,7 +84,7 @@ export default {
           margin-top: 2.778vw;
           border: 0.278vw solid #fb7a9f;
           color: #fb7a9f;
-          padding: 0.556vw;
+          padding: 0.833vw;
           display: flex;
           justify-content: center;
           align-items: center;
@@ -100,7 +100,7 @@ export default {
       }
       p {
           padding: 0;
-          margin: 2.778vw 0;
+          margin: 2.778vw 0 0 0;
           color: #aaa;
       }
   }
