@@ -26,13 +26,47 @@
         {{ model.username }}
       </a>
     </edit-banner>
-    <edit-banner left="性别"></edit-banner>
-    <edit-banner left="个性签名"></edit-banner>
+    <edit-banner left="性别" @bannerClick="gendershow = true">
+      <a href="javascript:;" slot="right">
+        <div v-if="model.gender == 0">男</div>
+        <div v-else>女</div>
+      </a>
+    </edit-banner>
+    <edit-banner left="个性签名" @bannerClick="showText = true">
+      <a href="javascript:;" slot="right">
+        {{ model.user_desc }}
+      </a>
+    </edit-banner>
 
-    <!-- 弹出框 -->
-    <van-dialog v-model="show" title="昵称" show-cancel-button @confirm="confirmClick">
-      <van-field v-model="content" autofocus/>
+    <!-- 昵称弹出框 -->
+    <van-dialog
+      v-model="show"
+      title="修改昵称"
+      show-cancel-button
+      @confirm="modifyNameClick"
+      @cancel="content = ''"
+    >
+      <van-field v-model="content" autofocus />
     </van-dialog>
+    <!-- 个性前面弹出框 -->
+    <van-dialog
+      v-model="showText"
+      title="修改个性签名"
+      show-cancel-button
+      @confirm="modifyTextName"
+      @cancel="content = ''"
+    >
+      <van-field v-model="content" type="textarea" autofocus />
+    </van-dialog>
+
+    <van-action-sheet
+      v-model="gendershow"
+      :actions="actions"
+      cancel-text="取消"
+      close-on-click-action
+      @cancel="onCancel"
+      @select="onSelect"
+    />
   </div>
 </template>
 
@@ -44,9 +78,18 @@ import EditBanner from "@/components/common/EditBanner.vue";
 export default {
   data() {
     return {
+      // 修改昵称弹出框
       show: false,
+      // 个性签名弹出框
+      showText: false,
+      // 性别选项
+      gendershow: false,
       model: {},
-      content: '',
+      content: "",
+      actions: [
+        { name: "男", val: 0 },
+        { name: "女", val: 1 },
+      ],
     };
   },
   components: {
@@ -80,12 +123,37 @@ export default {
         "/update/" + localStorage.getItem("id"),
         this.model
       );
-      console.log(res);
+      if(res.data.code === 200) {
+        this.$toast.fail('修改成功');
+      }
     },
-    // 用户点击了确认
-    confirmClick() {
+    // 修改昵称
+    modifyNameClick() {
+      if(this.content.trim().length === 0) {
+        return this.$toast.fail('内容不能为空')
+      }
       this.model.name = this.content;
       this.userUpdate();
+      this.content = "";
+    },
+    // 修改个性签名
+    modifyTextName() {
+      if(this.content.trim().length === 0) {
+        return this.$toast.fail('内容不能为空')
+      }
+      this.model.user_desc = this.content;
+      this.userUpdate();
+      this.content = "";
+    },
+    // 选中选项
+    onSelect(data) {
+      this.model.gender = data.val;
+      this.userUpdate();
+      this.$toast.fail('修改成功');
+    },
+    // 点击取消
+    onCancel() {
+      this.$toast.fail('已取消');
     }
   },
 };
