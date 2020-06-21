@@ -1,14 +1,14 @@
 <template>
   <div v-if="model" class="editViews">
-    <div style="margin-bottom: 15px">
+    <div style="margin-bottom: 4.167vw">
       <!-- 顶部导航 -->
-      <Navbar />
+      <Navbar :model="model"/>
     </div>
     <!-- 个人信息 -->
     <div class="uploadFile">
       <van-uploader
         class="uploadImg"
-        preview-size="100vw"
+        preview-size="360px"
         :after-read="afterRead"
       />
       <edit-banner left="头像">
@@ -38,6 +38,9 @@
       </a>
     </edit-banner>
 
+    <!-- 返回按钮 -->
+    <div class="editBack" @click="$router.back()">返回个人中心</div>
+  
     <!-- 昵称弹出框 -->
     <van-dialog
       v-model="show"
@@ -164,8 +167,8 @@ export default {
   color: #333;
 }
 .editViews img {
-  width: 46px;
-  height: 46px;
+  width: 12.778vw;
+  height: 12.778vw;
   border-radius: 50%;
 }
 .uploadFile {
@@ -175,5 +178,15 @@ export default {
     opacity: 0;
     position: absolute;
   }
+}
+.editBack {
+  background-color: #fff;
+  color: #666;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4.167vw 0;
+  font-size: 4vw;
+  margin-top: 5.556vw;
 }
 </style>

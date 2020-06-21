@@ -1,6 +1,6 @@
 <template>
   <div class="userInfo">
-      <Navbar />
+      <Navbar :model="model" />
       <img src="@/assets/bannerTop_new.png" alt="" class="backImg">
       <userDetail :userInfo="model" />
       <userArticle />
