@@ -1,15 +1,21 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+// 导入注册界面
 import register from '@/views/register.vue'
+// 导入登录界面
 import login from '@/views/login.vue'
+// 导入用户资料页面
 import userInfo from '@/views/userInfo.vue'
+// 导入修改页面
 import edit from '@/views/edit.vue'
+// 导入首页
+import Home from '@/views/Home.vue'
 
 Vue.use(VueRouter)
 
 const routes = [{
     path: '/',
-    redirect: '/login'
+    redirect: '/Home'
   },
   {
     path: '/register',
@@ -31,6 +37,13 @@ const routes = [{
     component: edit,
     meta: {
       isToken: true
+    }
+  },
+  {
+    path: '/Home',
+    component: Home,
+    meta: {
+      isToken: false
     }
   }
 ]

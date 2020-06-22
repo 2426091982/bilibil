@@ -10,7 +10,7 @@
         </p>
     </div>
     <div>
-      <img v-if="model.user_img" :src="model.user_img" @click="$router.push('/edit')">
+      <img v-if="imgUrl" :src="imgUrl" @click="$router.push('/edit')">
       <img v-else src="@/assets/default_img.jpg" @click="$router.push('/edit')"/>
       <p>下载 App</p>
     </div>
@@ -20,9 +20,21 @@
 <script>
 export default {
   data() {
-    return {};
-  },
-  props: ['model']
+        return {
+            imgUrl:''
+        }
+    },
+    methods:{
+        async NavInit() {
+            if(localStorage.getItem('token')){
+            const res = await this.$http.get('/user/' + localStorage.getItem('id'))
+            this.imgUrl = res.data[0].user_img
+            }
+        }
+    },
+    mounted() {
+        this.NavInit()
+    }
 };
 </script>
 

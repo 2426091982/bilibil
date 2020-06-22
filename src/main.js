@@ -10,6 +10,8 @@ import 'vant/lib/index.css';
 // 导入 http.js
 import http from '../http.js'
 
+// 导入字体图标
+import '@/assets/style.css'
 // 挂载到 Vue原型
 Vue.prototype.$http = http;
 

@@ -2,7 +2,7 @@
   <div v-if="model" class="editViews">
     <div style="margin-bottom: 4.167vw">
       <!-- 顶部导航 -->
-      <Navbar :model="model"/>
+      <Navbar/>
     </div>
     <!-- 个人信息 -->
     <div class="uploadFile">
