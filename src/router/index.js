@@ -10,6 +10,8 @@ import userInfo from '@/views/userInfo.vue'
 import edit from '@/views/edit.vue'
 // 导入首页
 import Home from '@/views/Home.vue'
+// 导入详情页面
+import Article from '@/views/Article.vue'
 
 Vue.use(VueRouter)
 
@@ -45,7 +47,14 @@ const routes = [{
     meta: {
       isToken: false
     }
-  }
+  },
+  {
+    path: '/Article/:id',
+    component: Article,
+    meta: {
+      isToken: false
+    }
+  },
 ]
 
 const router = new VueRouter({

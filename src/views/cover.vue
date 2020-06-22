@@ -2,7 +2,7 @@
   <div
     v-if="detailItem"
     class="detailItem"
-    @click="$router.push('/detail/' + detailItem.id + '')"
+    @click="$router.push('/Article/' + detailItem.id)"
   >
     <div class="imgParent">
       <img :src="detailItem.img" alt="" style="width:100%;height:100%" />
