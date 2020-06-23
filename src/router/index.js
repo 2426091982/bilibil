@@ -13,6 +13,7 @@ import Home from '@/views/Home.vue'
 // 导入详情页面
 import Article from '@/views/Article.vue'
 
+
 Vue.use(VueRouter)
 
 const routes = [{
@@ -45,6 +46,7 @@ const routes = [{
     path: '/Home',
     component: Home,
     meta: {
+      keepAlive: true,
       isToken: false
     }
   },
@@ -65,7 +67,8 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // 判断是否有 token,
   // 有些页面不需要 token 也可以访问，这些页面的 isToken = false
-  if((!localStorage.getItem('token') || !localStorage.getItem('id')) && to.meta.isToken == true) {
+  if((!localStorage.getItem('token') && !localStorage.getItem('id')) && to.meta.isToken == true) {
+    console.log(to.meta.isToken);
     // 跳转到登录页面
     router.push('/login')    
     Vue.prototype.$toast.fail('请重新登录');

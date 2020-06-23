@@ -2,7 +2,7 @@
   <div
     v-if="detailItem"
     class="detailItem"
-    @click="$router.push('/Article/' + detailItem.id)"
+    @click="pathPush"
   >
     <div class="imgParent">
       <img :src="detailItem.img" alt="" style="width:100%;height:100%" />
@@ -23,6 +23,15 @@ export default {
     return {};
   },
   props: ["detailItem"],
+  methods: {
+    pathPush() {
+      // 判断是否重复跳转路径
+      if(this.$route.path != '/Article/' + this.detailItem.id) {
+      this.$router.push('/Article/' + this.detailItem.id)
+      }
+    }
+  },
+
 };
 </script>
 

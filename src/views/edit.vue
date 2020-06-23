@@ -128,7 +128,9 @@ export default {
       );
       if(res.data.code === 200) {
         this.$toast.fail('修改成功');
+        this.$router.go(0);
       }
+      
     },
     // 修改昵称
     modifyNameClick() {

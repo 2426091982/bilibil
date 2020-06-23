@@ -61,7 +61,8 @@ export default {
         localStorage.setItem("id", res.id);
         localStorage.setItem("token", res.token);
         setTimeout(() => {
-          this.$router.push("/userinfo");
+          this.$router.push("/Home");
+          this.$router.go(0);
         }, 1000);
       } else {
         this.$toast.fail("格式不正确请重新输入");
