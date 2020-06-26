@@ -2,27 +2,33 @@
   <div class="home">
     <!-- 顶部导航 -->
     <Navbar />
-    <!-- 滚动导航 -->
-    <van-tabs v-model="active" swipeable sticky>
-      <van-tab v-for="item in Category" :key="item.id" :title="item.title">
-        <van-list
-          v-model="item.loading"
-          :finished="item.finished"
-          finished-text="我也是有底线的!"
-          @load="onLoad"
-          :immediate-check="false"
-        >
-          <div class="detailparent">
-            <cover
-              class="detailItem"
-              :detailItem="cateItem"
-              v-for="(cateItem, cateI) in item.list"
-              :key="cateI"
-            />
-          </div>
-        </van-list>
-      </van-tab>
-    </van-tabs>
+    <div class="categorytab">
+      <!-- 设置分类图标 -->
+      <div class="category-ico" @click="$router.push('/editcategory')">
+        <van-icon name="setting-o" />
+      </div>
+      <!-- 滚动导航 -->
+      <van-tabs v-model="active" swipeable sticky>
+        <van-tab v-for="item in Category" :key="item.id" :title="item.title">
+          <van-list
+            v-model="item.loading"
+            :finished="item.finished"
+            finished-text="我也是有底线的!"
+            @load="onLoad"
+            :immediate-check="false"
+          >
+            <div class="detailparent">
+              <cover
+                class="detailItem"
+                :detailItem="cateItem"
+                v-for="(cateItem, cateI) in item.list"
+                :key="cateI"
+              />
+            </div>
+          </van-list>
+        </van-tab>
+      </van-tabs>
+    </div>
     <!-- 视频组件 -->
   </div>
 </template>
@@ -48,14 +54,27 @@ export default {
   created() {
     this.selectCategory();
   },
+  activated() {
+    // 判断是否有 localstorage数据
+    if (localStorage.getItem("newCat")) {
+      let newCat = JSON.parse(localStorage.getItem("newCat"));
+      this.Category = this.changeCategory(newCat);
+      this.selectArticle();
+    }
+  },
   methods: {
     // 获取 category数据
     async selectCategory() {
+      // 如果 localstorage有数据return
+      if (localStorage.getItem("newCat")) {
+        return;
+      }
       const res = await this.$http.get("/Category");
       if (res.status !== 200) {
         return;
       }
-      this.changeCategory(res.data);
+      this.Category = this.changeCategory(res.data);
+      this.selectArticle();
     },
     // 修改 category的数据
     changeCategory(data) {
@@ -67,12 +86,11 @@ export default {
         item.loading = false;
         return item;
       });
-      this.Category = Category1;
-      this.selectArticle();
+      return Category1;
     },
     // 获取视频数据
     async selectArticle() {
-      const res = await this.$http.get(`/detail/${this.CategoryItem._id}`, {
+      const res = await this.$http.get("/detail/" + this.CategoryItem._id, {
         params: {
           page: this.CategoryItem.page,
           pagesize: this.CategoryItem.pagesize,
@@ -82,7 +100,7 @@ export default {
       this.CategoryItem.list.push(...res.data);
       this.CategoryItem.loading = false;
       // 当没有数据的时候
-      if(res.data.length < this.CategoryItem.pagesize) {
+      if (res.data.length < this.CategoryItem.pagesize) {
         this.CategoryItem.finished = true;
       }
     },
@@ -122,5 +140,16 @@ export default {
 }
 .home {
   background-color: #fff;
+}
+.categorytab {
+  position: relative;
+  .category-ico {
+    position: absolute;
+    z-index: 5;
+    right: 0;
+    top: 1.944vw;
+    padding: 1.389vw 2.778vw;
+    background-color: white;
+  }
 }
 </style>

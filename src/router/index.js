@@ -12,6 +12,8 @@ import edit from '@/views/edit.vue'
 import Home from '@/views/Home.vue'
 // 导入详情页面
 import Article from '@/views/Article.vue'
+// 导入设置分类页面
+import EditCategory from '@/views/EditCategory.vue'
 
 
 Vue.use(VueRouter)
@@ -57,6 +59,13 @@ const routes = [{
       isToken: false
     }
   },
+  {
+    path: '/editcategory',
+    component: EditCategory,
+    meta: {
+      isToken: false
+    }
+  }
 ]
 
 const router = new VueRouter({

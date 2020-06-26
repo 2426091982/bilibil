@@ -1,79 +1,122 @@
 <template>
   <div class="commentParent">
-    <div>
+    <div v-for="(item, index) in commentList" :key="index">
       <div class="commentItem">
         <div class="userImg">
-          <img src="@/assets/default_img.jpg" alt="" />
+          <img
+            v-if="item.userinfo && item.userinfo.user_img"
+            :src="item.userinfo.user_img"
+            alt=""
+          />
+          <img v-else src="@/assets/default_img.jpg" alt="" />
         </div>
         <div class="commentContent">
           <p>
-            <span>蜡笔小新</span>
-            <span>04-27</span>
+            <span v-if="item.userinfo">{{ item.userinfo.name }}</span>
+            <span v-else>用户已注销</span>
+            <span>{{ item.comment_date }}</span>
           </p>
           <div>
-            多怀念两年之前的日子啊。
-            每天休息的时候就打开主播真会玩，根本不用担心没得看，什么叫群英荟萃，卢本伟，孙亚龙，pdd，大司马，骚男，那时候的主播真会玩根本不担心没有素材，内容爆炸不说，lol,女神篇，守望篇，求生篇，八卦篇，主机篇，简直是主播黄金时代，每天不重样。直到那天开始，就一切都变了。卢本伟被封，pdd抽身而退，孙亚龙苟延残喘，三台柱一个一个倒了。接下来就更有意思了，主播之间竞争不靠谁更能吸引粉丝，而是看谁更符合道德楷模，谁有黑料被人翻出来。
+            {{ item.comment_content }}
+            <span class="publish" @click="publishClick(item.comment_id)"
+              >回复</span
+            >
           </div>
         </div>
       </div>
-      <comment-item />
+      <div style="padding-left: 11.111vw">
+        <comment-item @PostPublish="publishClick" :commentChild="item.child" />
+      </div>
     </div>
   </div>
 </template>
 
 <script>
 // 导入 回复评论组件
-import commentItem from './commentItem'
+import commentItem from "./commentItem";
 export default {
   data() {
-    return {};
+    return {
+      commentList: null,
+    };
   },
   created() {
     this.commentData();
   },
   methods: {
+    // 获取评论数据
     async commentData() {
       const res = await this.$http.get("/comment/" + this.$route.params.id);
-
-      console.log(res);
+      if (res.data) {
+        // 向父组件发送评论数
+        this.$emit("lengthselect", res.data.length);
+      }
+      this.commentList = this.changeCommentData(res.data);
+    },
+    // 修改评论数据
+    changeCommentData(data) {
+      function fn(temp) {
+        let arr1 = [];
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].parent_id == temp) {
+            arr1.push(data[i]);
+            data[i].child = fn(data[i].comment_id);
+          }
+        }
+        return arr1;
+      }
+      return fn(null);
+    },
+    // 回复评论
+    publishClick(id) {
+      // 向父组件传递
+      this.$emit("publishClick", id);
     },
   },
   components: {
-      commentItem
-  }
+    commentItem,
+  },
 };
 </script>
 
 <style lang="less" scoped>
 .commentParent {
-  padding: 10px 10px;
+  padding: 2.778vw 2.778vw;
   > div {
-    border-bottom: 1px solid #e7e7e7;
+    border-bottom: 0.278vw solid #e7e7e7;
   }
   .commentItem {
     display: flex;
-    padding: 5px 0;
+    align-items: center;
+    padding: 1.389vw 0;
     .userImg {
       margin-right: 10px;
       img {
-        width: 35px;
-        height: 35px;
+        width: 9.722vw;
+        height: 9.722vw;
         border-radius: 50%;
       }
     }
     .commentContent {
+      position: relative;
+      padding: 2.778vw 0;
       flex: 1;
       p {
         width: 100%;
         display: flex;
         justify-content: space-between;
         align-items: center;
-        font-size: 13px;
+        font-size: 3.611vw;
         color: #555;
-        margin-bottom: 5px;
+        margin-bottom: 1.389vw;
       }
       div {
-        font-size: 13px;
+        font-size: 3.611vw;
+      }
+      .publish {
+        position: absolute;
+        right: 0vw;
+        color: red;
       }
     }
   }

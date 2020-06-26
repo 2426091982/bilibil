@@ -2,12 +2,12 @@
   <div class="comment">
     <p class="comment-title">
       <span>评论</span>
-      <span>(999+)</span>
+      <span>({{dataLength}})</span>
     </p>
     <div class="commentMyInfo">
       <img :src="myUser.user_img" v-if="myUser" />
       <img src="@/assets/default_img.jpg" alt="" v-else />
-      <input type="text" placeholder="在这留下你的足迹" />
+      <input type="text" v-model="comcontent" ref="PostIpt" placeholder="在这留下你的足迹" />
       <button @click="commentPublish">发表</button>
     </div>
   </div>
@@ -15,15 +15,21 @@
 
 <script>
 export default {
+  props: ['dataLength'],
   data() {
     return {
       myUser: '',
+      // 评论
+      comcontent:''
     };
   },
   created() {
     if(localStorage.getItem('token')) {
       this.myUserinfo();
     }
+  },
+  updated() {
+
   },
   methods: {
     // 获取自己的数据
@@ -41,9 +47,15 @@ export default {
       ) {
         this.$toast("请先登录!");
       }
-
+      // 向父元素发送评论事件
+      this.$emit('Postcomment',this.comcontent)
+      this.comcontent  = '';
 
     },
+    focusIpt() {
+      // 评论框获得焦点
+      this.$refs.PostIpt.focus();
+    }
   },
 };
 </script>
